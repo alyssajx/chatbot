@@ -35,6 +35,6 @@ embeddings = np.array([embed(chunk) for chunk in chunks])
 dimension = embeddings.shape[1]
 
 #print(docs) 
-
+print("FAISS updated")
 #Embed the content 
 
