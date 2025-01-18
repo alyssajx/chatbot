@@ -8,9 +8,11 @@ import numpy as np
 
 from langchain.document_loaders import NotionDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 
-client = MistralClient(api_key=st.secrets["MISTRAL_AI_KEY"])
+api_key = os.environ[st.secrets["MISTRAL_AI_KEY"]]
+model = "open-mistral-nemo"
+client = MistralClient(api_key=api_key)
 
 def load_documents(): 
     document_loader = NotionDirectoryLoader("notion_content")
@@ -30,6 +32,7 @@ def embed(input: str):
 
 curr = load_documents()
 chunks = split_documents(curr)
+print(chunks)
 
 embeddings = np.array([embed(chunk) for chunk in chunks])
 dimension = embeddings.shape[1]
