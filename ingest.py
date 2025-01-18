@@ -2,18 +2,15 @@ import streamlit as st
 import os 
 from mistralai import Mistral
 from langchain_mistralai import MistralAIEmbeddings
+from mistralai.client import MistralClient
+import numpy as np
 
 
 from langchain.document_loaders import NotionDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 
-
-#Key is not supposed to be public 
-#model = "open-mistral-nemo"
-
-#client = Mistral(api_key=api_key)
+client = MistralClient(api_key=st.secrets["MISTRAL_AI_KEY"])
 
 def load_documents(): 
     document_loader = NotionDirectoryLoader("notion_content")
@@ -28,6 +25,14 @@ def split_documents(documents: list[Document]):
 
     return text_splitter.split_documents(documents)
 
+def embed(input: str):
+    return client.embeddings("mistral-embed", input = input).data[0].embedding
+
+curr = load_documents()
+chunks = split_documents(curr)
+
+embeddings = np.array([embed(chunk) for chunk in chunks])
+dimension = embeddings.shape[1]
 
 #print(docs) 
 
