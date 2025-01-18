@@ -1,29 +1,35 @@
 import streamlit as st
-import openai
+import os 
+from mistralai import Mistral
+from langchain_mistralai import MistralAIEmbeddings
+
+
 from langchain.document_loaders import NotionDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 
-# Load the Notion content located in the folder 'notion_content'
-loader = NotionDirectoryLoader("notion_content")
-documents = loader.load()
 
-# Split the Notion content into smaller chunks
-markdown_splitter = RecursiveCharacterTextSplitter(
-    separators=["#","##", "###", "\\n\\n","\\n","."],
-    chunk_size=1500,
-    chunk_overlap=100)
-docs = markdown_splitter.split_documents(documents)
+#Key is not supposed to be public 
+#model = "open-mistral-nemo"
 
-# Initialize OpenAI embedding model
-embeddings = OpenAIEmbeddings()
+#client = Mistral(api_key=api_key)
 
-# Convert all chunks into vectors embeddings using OpenAI embedding model
-# Store all vectors in FAISS index and save to local folder 'faiss_index'
-db = FAISS.from_documents(docs, embeddings)
-db.save_local("faiss_index")
+def load_documents(): 
+    document_loader = NotionDirectoryLoader("notion_content")
+    return document_loader.load()
 
-print('Local FAISS index has been successfully saved.')
+#Split content into small chunks 
+def split_documents(documents: list[Document]):
+    text_splitter = RecursiveCharacterTextSplitter(
+        separators=["#","##", "###", "\\n\\n","\\n","."],
+        chunk_size=1500,
+        chunk_overlap=100)
 
+    return text_splitter.split_documents(documents)
+
+
+#print(docs) 
+
+#Embed the content 
 
