@@ -1,7 +1,7 @@
 from mistralai.client import MistralClient
 import numpy as np
 
-client = MistralClient(api_key = )
+client = st.secrets["MISTRAL_AI_KEY"]
 
 def embed(input: str):
     return client.embeddings("mistral-embed", input = input).data[0].embedding
@@ -23,3 +23,4 @@ def retrieval():
         retrieved_chunk = [chunks[i] for i in I.tolist()[0]]
         return retrieved_chunk
         
+dimension = embeddings.shape[1]
