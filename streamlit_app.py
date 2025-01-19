@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+from frfr_new_ingest import load_chain
 
 # Show title and description.
 st.title("💬 Ask me how I DIED")
